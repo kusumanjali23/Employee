@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-deployment
+spec:
+  selector:
+      matchLabels:
+        app: employee
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: employee
+    spec:
+      containers:
+        - name: employee
+          image: "kusumanjali23/demoapplication:demoapplication"
+          imagePullPolicy: "Always"
+          ports:
+          - containerPort: 8080
+          env:
+            - name: DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: mongodb-config
+                  key: DATABASE
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mongodb-config
+                  key: HOST
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: MONGO_USERNAME
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: MONGO_PASSWORD
+              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: employee-service
+  labels:
+    app: employee
+spec:
+  type: NodePort
+  ports:
+    - name: https
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: employee

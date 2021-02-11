@@ -1,0 +1,23 @@
+# Creating a Base Image containing Java Runtime
+FROM adoptopenjdk/openjdk15:ubi-minimal-jre
+
+ 
+
+# Add Maintainer Info
+LABEL author.name="Kusumanjali Gurudasu " \
+      author.email="Kusumanjali_gurudasu@persistent.com" \
+      version="$VERSION" \
+      vendor="RNP" \
+      description="Demo Application"
+      
+EXPOSE 8080
+
+ 
+
+# Copy jar file to specified folder in base image
+COPY /target/demo-0.0.1-SNAPSHOT.jar demo.jar
+
+ 
+
+# Instructing Docker to execute our application
+ENTRYPOINT ["java", "-jar", "demo.jar"]

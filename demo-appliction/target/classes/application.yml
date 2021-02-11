@@ -1,0 +1,25 @@
+# MONGODB Properties
+
+spring:
+  data:
+    mongodb:
+      host: '${HOST}'
+      port: 27017
+      database: '${DATABASE}'
+      username: '${MONGO_USERNAME}'
+      password: '${MONGO_PASSWORD}'
+  cloud:
+    kubernetes:
+      discovery:
+        register: true
+      secrets:
+        name: mongodb-secret
+      config:
+        enabled: true
+        sources:
+        - namespace: default
+          name: mongodb-config
+      reload:
+        enabled: true
+        mode: polling
+        period: 1000
